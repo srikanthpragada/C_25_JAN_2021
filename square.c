@@ -8,6 +8,6 @@ void main()
 
       number = 25;  // Store 25 in number
       square = number * number;
-      printf("square");
+      printf("Square of %d is %d", number, square);
 
 }
