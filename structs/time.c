@@ -1,4 +1,3 @@
-
 struct time
 {
   int h,m,s;
