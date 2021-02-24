@@ -1,0 +1,4 @@
+This is to test how many words and lines are present in a file.
+We take one char at a time and check whether it is newline or space etc.
+We use fgetc().
+we can also use fgets()
