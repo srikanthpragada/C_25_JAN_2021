@@ -32,6 +32,49 @@ void add_student()
          fclose(fp);
 }
 
+void update_student()
+{
+     FILE * fp;
+     struct student s;
+     int rollno,count,offset;
+
+         fp = fopen(FILENAME, "r+b");  // read-write mode
+         if(fp == NULL)
+         {
+             printf("Sorry! Could not open file. Quitting...");
+             exit(1);
+         }
+
+         // take data about student
+         printf("Enter Rollno  :");
+         scanf("%d",&rollno);
+
+         // Read record of the given rollno
+         offset = (rollno - 1) * sizeof(s);
+         count = fseek(fp, offset, SEEK_SET);  // goto required student
+
+         if(count != 0) {
+             printf("Sorry! Invalid Roll number!\n");
+             return;
+         }
+
+         count = fread(&s,sizeof(s),1,fp);
+         if(count == 0) {
+               printf("Sorry!  Invalid Roll Number!\n");
+               return;
+         }
+         // Take new marks
+         printf("Enter marks  :");
+         scanf("%d",&s.marks);
+
+         // Move to required record
+         fseek(fp, offset, SEEK_SET);
+
+         // write data to file
+         fwrite(&s, sizeof(s), 1, fp);
+         fclose(fp);
+}
+
 void  list_students()
 {
      FILE * fp;
@@ -107,8 +150,9 @@ int choice;
         printf("1. Add Student\n");
         printf("2. List Students\n");
         printf("3. Get Student\n");
-        printf("4. Exit\n");
-        printf("Enter Choice [1-4] :");
+        printf("4. Update Student\n");
+        printf("5. Exit\n");
+        printf("Enter Choice [1-5] :");
         scanf("%d",&choice);
 
         switch(choice)
@@ -119,7 +163,9 @@ int choice;
                           break;
             case 3 : get_student();
                           break;
-            case 4 : printf("\nThank You!\n");
+            case 4 : update_student();
+                          break;
+            case 5 : printf("\nThank You!\n");
                           exit(0); // stop program
         } // switch
 
