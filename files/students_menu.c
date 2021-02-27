@@ -9,6 +9,13 @@ struct student
    int marks;
 };
 
+struct node
+{
+   struct student data;
+   struct node * next;
+};
+
+
 void add_student()
 {
      FILE * fp;
@@ -104,6 +111,59 @@ void  list_students()
          fclose(fp);
 }
 
+
+void  delete_student()
+{
+     FILE * fp;
+     struct student s;
+     struct node * root = NULL, * current, * prev;
+     int count, rollno, pos;
+
+         fp = fopen(FILENAME, "rb");
+         if(fp == NULL)
+         {
+             printf("Sorry! Could not open file. Quitting...");
+             exit(1);
+         }
+
+         printf("Enter rollno :");
+         scanf("%d",&rollno);
+
+         pos = 1;
+         while(1)
+         {
+             count = fread(&s,sizeof(s),1,fp);
+             if (count == 0)
+                break;
+
+             if (rollno != pos)
+             {
+               current = (struct node *) malloc(sizeof(struct node));
+               current->next = NULL;
+               current->data = s;
+               if (root == NULL)
+                  root = current;
+              else
+                 prev->next = current;
+           }
+           pos ++;
+           prev = current;
+       }
+       fclose(fp);
+
+       // write records from list to file
+      fp = fopen(FILENAME, "wb");
+      current = root;
+      while( current != NULL) {
+         // write data to file
+         fwrite(&(current->data), sizeof(struct student), 1,fp);
+         current = current -> next;
+      }
+      fclose(fp);
+      printf("\nSuccessfully deleted rollno : %d\n", rollno);
+
+}
+
 void  get_student()
 {
      FILE * fp;
@@ -151,8 +211,9 @@ int choice;
         printf("2. List Students\n");
         printf("3. Get Student\n");
         printf("4. Update Student\n");
-        printf("5. Exit\n");
-        printf("Enter Choice [1-5] :");
+        printf("5. Delete Student\n");
+        printf("6. Exit\n");
+        printf("Enter Choice [1-6] :");
         scanf("%d",&choice);
 
         switch(choice)
@@ -165,7 +226,9 @@ int choice;
                           break;
             case 4 : update_student();
                           break;
-            case 5 : printf("\nThank You!\n");
+            case 5 : delete_student();
+                          break;
+            case 6 : printf("\nThank You!\n");
                           exit(0); // stop program
         } // switch
 
